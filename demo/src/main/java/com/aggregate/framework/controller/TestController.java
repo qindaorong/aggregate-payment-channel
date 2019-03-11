@@ -4,7 +4,7 @@ import com.aggregate.framework.pay.bean.yiji.dto.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.VerifyBankCardDto;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
 import com.aggregate.framework.pay.enums.yiji.VerifyCardTypeEnums;
-import com.aggregate.framework.pay.service.YijiService;
+import com.aggregate.framework.pay.service.AggregatePayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @Autowired
-    YijiService yijiService;
+    AggregatePayService yijiService;
 
     @GetMapping(value = "/test")
     public void test(){

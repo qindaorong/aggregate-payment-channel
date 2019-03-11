@@ -4,7 +4,7 @@ import com.aggregate.framework.pay.bean.yiji.dto.BaseDto;
 import lombok.Data;
 
 @Data
-public class CommonResponse extends BaseDto {
+public class YijiCommonResponse extends BaseDto {
     private String protocol;
     private String service;
     private String version;

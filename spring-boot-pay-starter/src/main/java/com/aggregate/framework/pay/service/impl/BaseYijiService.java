@@ -29,7 +29,7 @@ public class BaseYijiService {
     protected String url;
 
 
-    protected Map<String ,String> initCommonPara(String service){
+    protected Map<String ,String> initPaymentCommonPara(String service){
         Map<String ,String> map = new HashMap<String, String>();
         map.put("protocol","httpPost");
         map.put("service",service);
@@ -42,6 +42,24 @@ public class BaseYijiService {
 
         return map;
     }
+
+
+    protected Map<String ,String> initChargebacksCommonPara(String service){
+        Map<String ,String> map = new HashMap<String, String>();
+        map.put(YijipayConstants.ORDER_NO, Ids.oid());
+        map.put("protocol","httpPost");
+        map.put("service",service);
+        map.put("version","1.0");
+        map.put("partnerId",partnerId);
+        map.put("signType","MD5");
+        map.put("merchOrderNo","");
+        map.put("context","");
+        map.put("returnUrl","");
+        map.put("notifyUrl","");
+
+        return map;
+    }
+
 
 
 

@@ -2,11 +2,11 @@ package com.aggregate.framework.pay.service.impl;
 
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
-import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
+import com.aggregate.framework.pay.bean.yiji.vo.YijiCommonResponse;
 import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.yiji.ApplyChannelEnums;
 import com.aggregate.framework.pay.framework.yiji.Constants;
-import com.aggregate.framework.pay.service.YijiService;
+import com.aggregate.framework.pay.service.AggregatePayService;
 import com.aggregate.framework.pay.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Service
-public class YijiServiceImpl extends BaseYijiService implements YijiService {
+public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayService {
 
 
     @Autowired
@@ -30,9 +30,9 @@ public class YijiServiceImpl extends BaseYijiService implements YijiService {
     }
 
     @Override
-    public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
+    public YijiCommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
         VerifyBankCardDto verifyBankCardDto = requestDto.getT();
-        Map<String, String> map =super.initCommonPara(Constants.YijiServiceUrl.VERIFY_BANK_CARD);
+        Map<String, String> map =super.initPaymentCommonPara(Constants.YijiServiceUrl.VERIFY_BANK_CARD);
         map.put("outOrderNo",verifyBankCardDto.getOutOrderNo());
         map.put("name",verifyBankCardDto.getName());
         map.put("certNo",verifyBankCardDto.getCertNo());
@@ -41,15 +41,15 @@ public class YijiServiceImpl extends BaseYijiService implements YijiService {
         map.put("verifyCardType",verifyBankCardDto.getVerifyCardType());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse = JsonUtil.parseObject(responseStr, CommonResponse.class);
-        return commonResponse;
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
 
     }
 
     @Override
-    public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
+    public YijiCommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
         LoanDto loanDto = requestDto.getT();
-        Map<String, String> map =super.initCommonPara(Constants.YijiServiceUrl.LOAN);
+        Map<String, String> map =super.initPaymentCommonPara(Constants.YijiServiceUrl.LOAN);
 
         map.put("merchOrderNo",loanDto.getMerchOrderNo());
         map.put("transAmount",String.valueOf(loanDto.getTransAmount().doubleValue()));
@@ -66,15 +66,15 @@ public class YijiServiceImpl extends BaseYijiService implements YijiService {
         map.put("memo",StringUtils.isEmpty(loanDto.getMemo())?"":loanDto.getMemo());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse = JsonUtil.parseObject(responseStr, CommonResponse.class);
-        return commonResponse;
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
     }
 
     @Override
-    public CommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
+    public YijiCommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
         ApplyCardDto applyCardDto = requestDto.getT();
         String serviceUrl = applyCardDto.getEnums().equals(ApplyChannelEnums.unionpay)?Constants.YijiServiceUrl.UNIONPAY:Constants.YijiServiceUrl.NUCC;
-        Map<String, String> map =super.initCommonPara(serviceUrl);
+        Map<String, String> map =super.initChargebacksCommonPara(serviceUrl);
 
         map.put("signAccId",applyCardDto.getSignAccId());
         map.put("signName",applyCardDto.getSignName());
@@ -82,37 +82,48 @@ public class YijiServiceImpl extends BaseYijiService implements YijiService {
         map.put("signMobile",applyCardDto.getSignMobile());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse = JsonUtil.parseObject(responseStr, CommonResponse.class);
-        return commonResponse;
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
     }
 
     @Override
-    public CommonResponse cardAddConfirm(AggregateRequestDto<CardAddConfirmDto> requestDto) {
+    public YijiCommonResponse cardAddConfirm(AggregateRequestDto<CardAddConfirmDto> requestDto) {
         CardAddConfirmDto cardAddConfirmDto = requestDto.getT();
-        Map<String, String> map =super.initCommonPara(Constants.YijiServiceUrl.CARD_ADD_CONFIRM);
+        Map<String, String> map =super.initChargebacksCommonPara(Constants.YijiServiceUrl.CARD_ADD_CONFIRM);
 
         map.put("signNo",cardAddConfirmDto.getSignNo());
         map.put("authMsg",cardAddConfirmDto.getAuthMsg());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse = JsonUtil.parseObject(responseStr, CommonResponse.class);
-        return commonResponse;
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
     }
 
     @Override
-    public CommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
+    public YijiCommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
         DeleteCardDto deleteCardDto = requestDto.getT();
-        Map<String, String> map =super.initCommonPara(Constants.YijiServiceUrl.CARD_DELETE);
+        Map<String, String> map =super.initChargebacksCommonPara(Constants.YijiServiceUrl.CARD_DELETE);
 
         map.put("signNo",deleteCardDto.getSignNo());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse = JsonUtil.parseObject(responseStr, CommonResponse.class);
-        return commonResponse;
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
     }
 
     @Override
-    public CommonResponse payEntrustpay(AggregateRequestDto<EntrustPayDto> requestDto) {
-        return null;
+    public YijiCommonResponse payEntrustPay(AggregateRequestDto<EntrustPayDto> requestDto) {
+        EntrustPayDto entrustPayDto = requestDto.getT();
+        Map<String, String> map =super.initChargebacksCommonPara(Constants.YijiServiceUrl.PAY_ENTRUSTPAY);
+
+        map.put("orderDesc",entrustPayDto.getOrderDesc());
+        map.put("bizTp",entrustPayDto.getBizTp());
+        map.put("tradeAmount",String.valueOf(entrustPayDto.getTradeAmount().doubleValue()));
+        map.put("payeeUserId",yijiPayConfig.getPartnerId());
+        map.put("signNo",entrustPayDto.getSignNo());
+
+        String responseStr = super.doPost(map);
+        YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
+        return yijiCommonResponse;
     }
 }
