@@ -11,25 +11,15 @@ import com.aggregate.framework.pay.framework.yiji.Constants;
 import com.aggregate.framework.pay.service.AggregatePayService;
 import com.aggregate.framework.pay.utils.JsonUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Objects;
 
 
 public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayService {
 
-
     AggregatePayConfig.YijiPayConfig yijiPayConfig;
-
-    @PostConstruct
-    public void init(){
-        super.partnerId = yijiPayConfig.getPartnerId();
-        super.privateKey = yijiPayConfig.getPrivateKey();
-        super.url = yijiPayConfig.getUrl();
-    }
 
     @Override
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
@@ -43,9 +33,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("verifyCardType",verifyBankCardDto.getVerifyCardType());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+        return this.convert2CommonResponse(responseStr);
 
     }
 
@@ -69,9 +57,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("memo",StringUtils.isEmpty(loanDto.getMemo())?"":loanDto.getMemo());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+        return this.convert2CommonResponse(responseStr);
     }
 
     @Override
@@ -86,9 +72,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("signMobile",applyCardDto.getSignMobile());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+        return this.convert2CommonResponse(responseStr);
     }
 
     @Override
@@ -100,24 +84,17 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("authMsg",cardAddConfirmDto.getAuthMsg());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+        return this.convert2CommonResponse(responseStr);
     }
 
     @Override
     public CommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
         DeleteCardDto deleteCardDto = requestDto.getT();
         Map<String, String> map =super.initChargebacksCommonPara(Constants.YijiServiceUrl.CARD_DELETE);
-
         map.put("signNo",deleteCardDto.getSignNo());
 
         String responseStr = super.doPost(map);
-
-
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+        return this.convert2CommonResponse(responseStr);
     }
 
     @Override
@@ -132,9 +109,8 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("signNo",entrustPayDto.getSignNo());
 
         String responseStr = super.doPost(map);
-        CommonResponse commonResponse  = new CommonResponse();
-        this.commonResponseConvert(responseStr,commonResponse);
-        return commonResponse;
+
+        return this.convert2CommonResponse(responseStr);
     }
 
     private YijiPayServiceImpl(){
@@ -152,7 +128,6 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
 
 
     public static final YijiPayServiceImpl getInstance(){
-        //在返回结果以前，一定会先加载内部类
         return YijiPayServiceImpl.YijiPayServiceHolder.YIJIPAY_SERVICE;
     }
 
@@ -161,9 +136,11 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         private static final YijiPayServiceImpl YIJIPAY_SERVICE = new YijiPayServiceImpl();
     }
 
-    public  void commonResponseConvert(String  responseStr,CommonResponse commonResponse){
+    public  CommonResponse convert2CommonResponse(String  responseStr){
+        CommonResponse commonResponse  = new CommonResponse();
         YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
         BeanUtils.copyProperties(yijiCommonResponse,commonResponse);
+        return commonResponse;
     }
 
 
