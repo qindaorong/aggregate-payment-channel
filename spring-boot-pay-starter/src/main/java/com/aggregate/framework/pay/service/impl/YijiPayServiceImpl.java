@@ -3,6 +3,7 @@ package com.aggregate.framework.pay.service.impl;
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.YijiCommonResponse;
+import com.aggregate.framework.pay.components.SpringApplicationContext;
 import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.yiji.ApplyChannelEnums;
 import com.aggregate.framework.pay.framework.yiji.Constants;
@@ -14,12 +15,12 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
+import java.util.Objects;
 
-@Service
+
 public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayService {
 
 
-    @Autowired
     AggregatePayConfig.YijiPayConfig yijiPayConfig;
 
     @PostConstruct
@@ -126,4 +127,30 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
         return yijiCommonResponse;
     }
+
+    private YijiPayServiceImpl(){
+        if(YijiPayServiceImpl.YijiPayServiceHolder.YIJIPAY_SERVICE != null){
+            throw new RuntimeException("不允许创建多个实例");
+        }
+
+        if(Objects.isNull(yijiPayConfig)){
+            yijiPayConfig = SpringApplicationContext.getBean(AggregatePayConfig.YijiPayConfig .class);
+            super.partnerId = yijiPayConfig.getPartnerId();
+            super.privateKey = yijiPayConfig.getPrivateKey();
+            super.url = yijiPayConfig.getUrl();
+        }
+    }
+
+
+    public static final YijiPayServiceImpl getInstance(){
+        //在返回结果以前，一定会先加载内部类
+        return YijiPayServiceImpl.YijiPayServiceHolder.YIJIPAY_SERVICE;
+    }
+
+
+    private static class YijiPayServiceHolder{
+        private static final YijiPayServiceImpl YIJIPAY_SERVICE = new YijiPayServiceImpl();
+    }
+
+
 }

@@ -1,14 +1,10 @@
 package com.aggregate.framework.pay.components;
 
-import org.springframework.stereotype.Component;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-@Component
 public class PayProxyHandler implements InvocationHandler {
-
 
     private Object target;
 
