@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class AggregatePayConfig {
 
     @Data
-    @Component
+    @Component(value = "yijiPayConfig")
     @ConfigurationProperties(prefix = "channerls.yiji")
     public static class YijiPayConfig{
         private String url;

@@ -1,9 +1,12 @@
 package com.aggregate.framework.pay.components;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+@Slf4j
 public class PayProxyHandler implements InvocationHandler {
 
     private Object target;
@@ -23,11 +26,11 @@ public class PayProxyHandler implements InvocationHandler {
     }
 
     private void before(){
-        System.out.println("[before] method");
+        log.debug("[before] method");
     }
 
     private void after(){
-        System.out.println("[after] method");
+        log.debug("[after] method");
     }
 
 }

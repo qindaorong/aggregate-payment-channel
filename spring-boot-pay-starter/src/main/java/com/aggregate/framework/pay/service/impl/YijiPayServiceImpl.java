@@ -4,7 +4,6 @@ import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
 import com.aggregate.framework.pay.bean.yiji.vo.YijiCommonResponse;
-import com.aggregate.framework.pay.components.SpringApplicationContext;
 import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.yiji.ApplyChannelEnums;
 import com.aggregate.framework.pay.framework.yiji.Constants;
@@ -14,12 +13,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
-import java.util.Objects;
-
 
 public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayService {
 
-    AggregatePayConfig.YijiPayConfig yijiPayConfig;
+
+    private static YijiPayServiceImpl yijiPayServiceImpl;
 
     @Override
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
@@ -105,7 +103,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         map.put("orderDesc",entrustPayDto.getOrderDesc());
         map.put("bizTp",entrustPayDto.getBizTp());
         map.put("tradeAmount",String.valueOf(entrustPayDto.getTradeAmount().doubleValue()));
-        map.put("payeeUserId",yijiPayConfig.getPartnerId());
+        map.put("payeeUserId",partnerId);
         map.put("signNo",entrustPayDto.getSignNo());
 
         String responseStr = super.doPost(map);
@@ -113,27 +111,14 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         return this.convert2CommonResponse(responseStr);
     }
 
-    private YijiPayServiceImpl(){
-        if(YijiPayServiceImpl.YijiPayServiceHolder.YIJIPAY_SERVICE != null){
-            throw new RuntimeException("不允许创建多个实例");
+    public static final YijiPayServiceImpl getInstance(AggregatePayConfig.YijiPayConfig payConfig){
+        if( null == YijiPayServiceImpl.yijiPayServiceImpl){
+            yijiPayServiceImpl = new YijiPayServiceImpl();
+            partnerId = payConfig.getPartnerId();
+            privateKey = payConfig.getPrivateKey();
+            url = payConfig.getUrl();
         }
-
-        if(Objects.isNull(yijiPayConfig)){
-            yijiPayConfig = SpringApplicationContext.getBean(AggregatePayConfig.YijiPayConfig .class);
-            super.partnerId = yijiPayConfig.getPartnerId();
-            super.privateKey = yijiPayConfig.getPrivateKey();
-            super.url = yijiPayConfig.getUrl();
-        }
-    }
-
-
-    public static final YijiPayServiceImpl getInstance(){
-        return YijiPayServiceImpl.YijiPayServiceHolder.YIJIPAY_SERVICE;
-    }
-
-
-    private static class YijiPayServiceHolder{
-        private static final YijiPayServiceImpl YIJIPAY_SERVICE = new YijiPayServiceImpl();
+        return yijiPayServiceImpl;
     }
 
     public  CommonResponse convert2CommonResponse(String  responseStr){

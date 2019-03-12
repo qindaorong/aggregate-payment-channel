@@ -4,9 +4,11 @@ import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
 import com.aggregate.framework.pay.components.PayProxyHandler;
+import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
 import com.aggregate.framework.pay.service.impl.YijiPayServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -18,11 +20,15 @@ import java.util.Map;
 @Slf4j
 public class AggregatePayServiceImpl implements AggregatePayService {
 
-    private Map<String,AggregatePayService> serviceMap = new HashMap<>();
+    private Map<String,AggregatePayService> serviceMap = new HashMap<String,AggregatePayService>();
+
+    @Autowired
+    AggregatePayConfig.YijiPayConfig yijiPayConfig;
+
 
     @PostConstruct
     public void init(){
-        serviceMap.put(PayChannelEnums.YIJI.name(), YijiPayServiceImpl.getInstance());
+        serviceMap.put(PayChannelEnums.YIJI.name(), YijiPayServiceImpl.getInstance(yijiPayConfig));
     }
 
 
@@ -32,7 +38,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("verifyBankCard",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +51,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("loan",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,7 +64,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("addApplyCard",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +77,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("cardAddConfirm",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +90,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("cardDelete",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,7 +103,7 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
             Method method = obj.getClass().getMethod("payEntrustPay",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj);
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
         }

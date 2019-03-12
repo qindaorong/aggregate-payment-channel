@@ -16,17 +16,17 @@ public class BaseYijiService {
     /**
      * 用户id
      */
-    protected String partnerId;
+    protected static String partnerId;
 
     /**
      * 用户key
      */
-    protected String privateKey;
+    protected static  String privateKey;
 
     /**
      * 易极请求url
      */
-    protected String url;
+    protected static  String url;
 
 
     protected Map<String ,String> initPaymentCommonPara(String service){
