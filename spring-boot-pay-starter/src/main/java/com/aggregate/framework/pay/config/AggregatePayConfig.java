@@ -16,6 +16,7 @@ public class AggregatePayConfig {
     public static class YijiPayConfig{
         private String url;
         private String partnerId;
+        private String partnerIdTest;
         private String privateKey;
         private String keystoreName;
         private String keystorePassword;
