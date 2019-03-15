@@ -46,6 +46,19 @@ public class AggregatePayServiceImpl implements AggregatePayService {
     }
 
     @Override
+    public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto) {
+        CommonResponse  commonResponse = null;
+        try {
+            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
+            Method method = obj.getClass().getMethod("verifyBankCardQuery",requestDto.getClass());
+            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return commonResponse;
+    }
+
+    @Override
     public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
         CommonResponse  commonResponse = null;
         try {

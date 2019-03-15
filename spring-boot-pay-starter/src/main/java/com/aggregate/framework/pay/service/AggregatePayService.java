@@ -17,7 +17,15 @@ public interface AggregatePayService {
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto);
 
     /**
-     * 放卡
+     * 验卡查询
+     * @param requestDto  商户验卡订单号
+     * @return
+     */
+    public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto);
+
+
+    /**
+     * 放款
      * @param requestDto
      * @return
      */

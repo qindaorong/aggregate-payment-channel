@@ -36,6 +36,15 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
     }
 
     @Override
+    public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto) {
+        VerifyBankCardQueryDto verifyBankCardQueryDto = requestDto.getT();
+        Map<String, String> map = super.initPaymentCommonPara(Constants.YijiServiceUrl.VERIFY_BANK_CARD_QUERY);
+        map.put("outOrderNo",verifyBankCardQueryDto.getOutOrderNo());
+        String responseStr = super.doPost(map);
+        return this.convert2CommonResponse(responseStr);
+    }
+
+    @Override
     public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
         LoanDto loanDto = requestDto.getT();
         Map<String, String> map =super.initPaymentCommonPara(Constants.YijiServiceUrl.LOAN);
@@ -62,14 +71,14 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
     public CommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
         ApplyCardDto applyCardDto = requestDto.getT();
         String serviceUrl = applyCardDto.getEnums().equals(ApplyChannelEnums.unionpay)?Constants.YijiServiceUrl.UNIONPAY:Constants.YijiServiceUrl.NUCC;
-        Map<String, String> map =super.initChargebacksCommonPara(serviceUrl);
+        Map<String, String> map = super.initChargebacksCommonParaNewPartnerId(serviceUrl);
 
         map.put("signAccId",applyCardDto.getSignAccId());
         map.put("signName",applyCardDto.getSignName());
         map.put("signID",applyCardDto.getSignID());
         map.put("signMobile",applyCardDto.getSignMobile());
 
-        String responseStr = super.doPost(map);
+        String responseStr = super.doPostNewUrl(map);
         return this.convert2CommonResponse(responseStr);
     }
 
@@ -115,6 +124,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         if( null == YijiPayServiceImpl.yijiPayServiceImpl){
             yijiPayServiceImpl = new YijiPayServiceImpl();
             partnerId = payConfig.getPartnerId();
+            partnerIdTest = payConfig.getPartnerIdTest();
             privateKey = payConfig.getPrivateKey();
             url = payConfig.getUrl();
         }
@@ -127,6 +137,7 @@ public class YijiPayServiceImpl extends BaseYijiService implements AggregatePayS
         BeanUtils.copyProperties(yijiCommonResponse,commonResponse);
         return commonResponse;
     }
+
 
 
 
