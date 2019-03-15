@@ -7,6 +7,7 @@ import com.aggregate.framework.pay.components.PayProxyHandler;
 import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
 import com.aggregate.framework.pay.service.impl.YijiPayServiceImpl;
+import com.yiji.openapi.sdk.YijiPayClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,12 @@ public class AggregatePayServiceImpl implements AggregatePayService {
     @Autowired
     AggregatePayConfig.YijiPayConfig yijiPayConfig;
 
+    @Autowired
+    YijiPayClient yijiPayClient;
 
     @PostConstruct
     public void init(){
-        serviceMap.put(PayChannelEnums.YIJI.name(), YijiPayServiceImpl.getInstance(yijiPayConfig));
+        serviceMap.put(PayChannelEnums.YIJI.name(), YijiPayServiceImpl.getInstance(yijiPayConfig,yijiPayClient));
     }
 
 

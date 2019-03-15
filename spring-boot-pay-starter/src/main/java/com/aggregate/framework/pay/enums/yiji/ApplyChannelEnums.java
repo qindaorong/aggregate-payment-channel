@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ApplyChannelEnums {
 
-	unionpay("unionpay"),
-	nucc("nucc");
+	unionpay("card.add.apply.unionpay"),
+	nucc("card.add.apply.nucc");
 
 	private String applyChannel;
 

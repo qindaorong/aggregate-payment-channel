@@ -38,4 +38,10 @@ public class ApplyCardDto extends BaseDto {
      */
     private String signMobile;
 
+
+    /**
+     * 交易订单号(16-40)
+     */
+    private String merchOrderNo;
+
 }

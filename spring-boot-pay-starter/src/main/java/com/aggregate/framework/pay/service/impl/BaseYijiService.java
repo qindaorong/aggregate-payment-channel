@@ -1,8 +1,11 @@
 package com.aggregate.framework.pay.service.impl;
 
+import com.aggregate.framework.pay.config.AggregatePayConfig;
+import com.aggregate.framework.pay.enums.yiji.ApplyChannelEnums;
+import com.yiji.openapi.sdk.ApiSdkConstants;
+import com.yiji.openapi.sdk.YijiPayClient;
 import com.yiji.openapi.tool.YijifuGateway;
 import com.yiji.openapi.tool.YijipayConstants;
-import com.yiji.openapi.tool.util.DigestUtil;
 import com.yiji.openapi.tool.util.Ids;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,10 @@ public class BaseYijiService {
      */
     protected static  String url;
 
+    /**
+     * 易极请求openApiUrl
+     */
+    protected static  String openApiUrl;
 
 
 
@@ -51,36 +58,24 @@ public class BaseYijiService {
         return map;
     }
 
-
-    protected Map<String ,String> initChargebacksCommonPara(String service){
+    /**
+     * 扣款公共参数
+     * @param service
+     * @return
+     */
+    protected Map<String ,String> initDeductionCommonPara(String service){
         Map<String ,String> map = new HashMap<String, String>();
-        map.put(YijipayConstants.ORDER_NO, Ids.oid());
-        map.put("protocol","httpPost");
-        map.put("service",service);
-        map.put("version","1.0");
-        map.put("partnerId",partnerId);
-        map.put("signType","MD5");
-        map.put("merchOrderNo","");
-        map.put("context","");
-        map.put("returnUrl","");
-        map.put("notifyUrl","");
-
-        return map;
-    }
-
-    protected Map<String ,String> initChargebacksCommonParaNewPartnerId(String service){
-        Map<String ,String> map = new HashMap<String, String>();
-        map.put("partnerId",partnerIdTest);
-        map.put(YijipayConstants.ORDER_NO, Ids.oid());
-        map.put("protocol","httpPost");
-        map.put("service",service);
-        map.put("version","1.0");
-        map.put("signType","RSA");
+        map.put("signType", "RSA");
+        map.put("protocol", " HTTP-FORM-JOSN");
+        map.put("orderNo", Ids.oid());
+        map.put("service", service);
+        map.put("partnerId", ApiSdkConstants.PARTNERID);
+        map.put("version", "1.0");
         return map;
     }
 
 
-    protected String doPost(Map<String ,String> paraMap){
+    protected String gateWaydoPost(Map<String, String> paraMap){
         String responseStr = "";
         try {
             //同步请求(已经做了签名验签)
@@ -92,17 +87,17 @@ public class BaseYijiService {
         return responseStr;
     }
 
-    protected String doPostNewUrl(Map<String ,String> paraMap){
-        String responseStr = "";
-        try {
-            //同步请求(已经做了签名验签)
-            responseStr = YijifuGateway.getOpenApiClientService().doPost("https://openapi.yijifu.net/gateway.html",paraMap, privateKey);
-            log.debug("response string is :{}",responseStr);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    protected String sdkDoPost(Map<String, String> paraMap, YijiPayClient yijiPayClient){
+        String signString = yijiPayClient.sign(paraMap);
+        paraMap.put("sign", signString);
+        String responseStr = yijiPayClient.post(ApiSdkConstants.SERVICE_GATEWAY, paraMap);
+        boolean isPass = yijiPayClient.verySign(responseStr);
+        if(isPass) {
+            log.debug("verySign passed ！response string is :{}",responseStr);
+        }else {
+            log.debug("verySign not pass ");
         }
         return responseStr;
     }
-
-
 }

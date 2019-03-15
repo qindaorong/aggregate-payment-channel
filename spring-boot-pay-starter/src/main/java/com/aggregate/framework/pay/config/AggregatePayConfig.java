@@ -21,5 +21,6 @@ public class AggregatePayConfig {
         private String keystoreName;
         private String keystorePassword;
         private String publicKeyName;
+        private String apidocUrl;
     }
 }

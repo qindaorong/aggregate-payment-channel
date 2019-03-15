@@ -22,6 +22,7 @@ public class TestController {
     @Autowired
     AggregatePayService yijiService;
 
+
     /**
      *  验卡
      */
@@ -56,9 +57,35 @@ public class TestController {
 
 
 
+    /**
+     * 放款
+     */
+    @GetMapping(value = "/loan")
+    public void loan(){
+        BigDecimal bigDecimal = new BigDecimal(1);
+        Date date = new Date();
+        LoanDto loanDto =
+                LoanDto.builder()
+                        .merchOrderNo(date.getTime()+"")
+                        .transAmount(bigDecimal)
+                        .accountName("郭欣")
+                        .certNo("610121199107274442")
+                        .accountNo("6214830297644683")
+                        .accountType(AccountTypeEnums.privateType.getResultCode())
+                        .bankCode("CMB")
+                        .purpose("代发工资")
+                        .build();
+        AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(loanDto).enums(PayChannelEnums.YIJI).build();
+        yijiService.loan(aggregateRequestDto);
+        //log.debug("[aggregayrPayService][verifyBankCard] value is {}",isPass);
+    }
+
+
+
 
     /**
      *  添加银行卡（签约）
+     *  statues : ok
      */
     @GetMapping(value = "/addApplyCard")
     public void addApplyCard(){
@@ -69,6 +96,7 @@ public class TestController {
                         .signName("马涛")
                         .signID("610429199009085178")
                         .signMobile("18317146596")
+                        .merchOrderNo("12345678901234567890")
                         .build();
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(applyCardDto).enums(PayChannelEnums.YIJI).build();
         yijiService.addApplyCard(aggregateRequestDto);
@@ -77,15 +105,17 @@ public class TestController {
 
     /**
      *  确认添加银行卡
+     *  statues : ok
      */
     @GetMapping(value = "/cardAddConfirm")
     public void cardAddConfirm(){
         CardAddConfirmDto cardAddConfirmDto =
                 CardAddConfirmDto.builder()
                         // 动态短信验证码
-                        .authMsg("")
+                        .authMsg("123456")
                         // 申请添加银行卡时，由易极付返回
-                        .signNo("")
+                        .signNo("000q01o01j1b6qzjwk00")
+                        .merchOrderNo("12345678901234567890")
                         .build();
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(cardAddConfirmDto).enums(PayChannelEnums.YIJI).build();
         yijiService.cardAddConfirm(aggregateRequestDto);
@@ -95,13 +125,15 @@ public class TestController {
 
     /**
      *  删除银行卡（解约）
+     *  statues : hold on
      */
     @GetMapping(value = "/cardDelete")
     public void cardDelete(){
         DeleteCardDto deleteCardDto =
                 DeleteCardDto.builder()
                         // 申请添加银行卡时，由易极付返回
-                        .signNo("")
+                        .signNo("000q01o01j1b6qzjwk00")
+                        .merchOrderNo("12345678901234567890")
                         .build();
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(deleteCardDto).enums(PayChannelEnums.YIJI).build();
         yijiService.cardDelete(aggregateRequestDto);
@@ -125,31 +157,5 @@ public class TestController {
                         .build();
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(entrustPayDto).enums(PayChannelEnums.YIJI).build();
         yijiService.payEntrustPay(aggregateRequestDto);
-    }
-
-
-
-
-    /**
-     * 放款
-     */
-    @GetMapping(value = "/loan")
-    public void loan(){
-        BigDecimal bigDecimal = new BigDecimal(1);
-        Date date = new Date();
-        LoanDto loanDto =
-                LoanDto.builder()
-                        .merchOrderNo(date.getTime()+"")
-                        .transAmount(bigDecimal)
-                        .accountName("郭欣")
-                        .certNo("610121199107274442")
-                        .accountNo("6214830297644683")
-                        .accountType(AccountTypeEnums.privateType.getResultCode())
-                        .bankCode("CMB")
-                        .purpose("代发工资")
-                        .build();
-        AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(loanDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.loan(aggregateRequestDto);
-        //log.debug("[aggregayrPayService][verifyBankCard] value is {}",isPass);
     }
 }

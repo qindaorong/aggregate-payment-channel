@@ -16,4 +16,9 @@ public class DeleteCardDto extends BaseDto {
      */
     private String signNo;
 
+    /**
+     * 交易订单号(16-40)
+     */
+    private String merchOrderNo;
+
 }

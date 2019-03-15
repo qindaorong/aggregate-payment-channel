@@ -21,4 +21,9 @@ public class CardAddConfirmDto extends BaseDto {
      */
     private String authMsg;
 
+    /**
+     * 交易订单号(16-40)
+     */
+    private String merchOrderNo;
+
 }
