@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface YijiCallBackService {
 
-    /**
+      /**
      * 验卡异步通知
      * @param request
      * @return

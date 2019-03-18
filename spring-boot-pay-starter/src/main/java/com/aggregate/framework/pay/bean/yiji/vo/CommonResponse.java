@@ -7,7 +7,12 @@ import lombok.Data;
 public class CommonResponse extends BaseDto {
 
     private String resultCode;
+
     private String resultMessage;
-    private String success;
+
+    /**
+     * 第三方返回json
+     */
+    private String responseStr;
 
 }

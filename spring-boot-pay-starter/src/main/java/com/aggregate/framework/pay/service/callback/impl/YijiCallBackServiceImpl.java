@@ -4,6 +4,8 @@ import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.yiji.ResultCodeEnums;
 import com.aggregate.framework.pay.service.callback.YijiCallBackService;
 import com.aggregate.framework.pay.utils.NotifyUtils;
+import com.yiji.openapi.sdk.common.message.ApiMessage;
+import com.yiji.openapi.sdk.notify.NotifyHandler;
 import com.yiji.openapi.tool.YijifuGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class YijiCallBackServiceImpl implements YijiCallBackService {
+public class YijiCallBackServiceImpl extends NotifyHandler implements YijiCallBackService {
 
     @Autowired
     private AggregatePayConfig.YijiPayConfig yijiPayConfig;
@@ -49,6 +51,16 @@ public class YijiCallBackServiceImpl implements YijiCallBackService {
     public Boolean payEntrustPayCallBack(HttpServletRequest request) {
         Map<String, String> notifyData = NotifyUtils.getNotifyParameters(request);
         boolean signResult = YijifuGateway.getOpenApiClientService().verificationSign(notifyData,yijiPayConfig.getPrivateKey());
+        return null;
+    }
+
+    @Override
+    public void handleNotify(ApiMessage apiMessage) {
+
+    }
+
+    @Override
+    public String serviceKey() {
         return null;
     }
 }

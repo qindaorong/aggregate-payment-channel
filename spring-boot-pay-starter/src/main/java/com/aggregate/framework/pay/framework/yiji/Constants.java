@@ -11,9 +11,5 @@ public class Constants {
         public static final String CARD_DELETE="card.delete";
         public static final String PAY_ENTRUSTPAY="pay.entrustpay";
         public static final String VERIFY_BANK_CARD_QUERY ="verifyBankCardQuery";
-
-
-
-
     }
 }

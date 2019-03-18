@@ -1,29 +1,23 @@
 package com.aggregate.framework.controller;
 
-import com.aggregate.framework.common.bean.ExceptionAdvice;
-import com.aggregate.framework.common.bean.ResponseResult;
-import com.aggregate.framework.common.exception.CodeMessage;
+
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
+import com.aggregate.framework.pay.framework.exceptions.CodeMessage;
+import com.aggregate.framework.pay.framework.exceptions.ExceptionAdvice;
+import com.aggregate.framework.pay.framework.exceptions.ResponseResult;
 import com.aggregate.framework.pay.service.AggregatePayService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @Slf4j
@@ -31,8 +25,6 @@ public class YijiController {
 
     @Autowired
     AggregatePayService yijiService;
-
-
 
     /**
      *  验卡

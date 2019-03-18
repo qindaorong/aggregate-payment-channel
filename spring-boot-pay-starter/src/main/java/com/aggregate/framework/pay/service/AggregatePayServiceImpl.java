@@ -1,86 +1,102 @@
 package com.aggregate.framework.pay.service;
 
+import com.aggregate.framework.pay.adapters.PayAdapter;
+import com.aggregate.framework.pay.adapters.YijiAdapter;
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
-import com.aggregate.framework.pay.components.PayProxyHandler;
-import com.aggregate.framework.pay.config.AggregatePayConfig;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
-import com.aggregate.framework.pay.service.impl.YijiPayServiceImpl;
-import com.yiji.openapi.sdk.YijiPayClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @Slf4j
 public class AggregatePayServiceImpl implements AggregatePayService {
 
-    private Map<String,AggregatePayService> serviceMap = new HashMap<String,AggregatePayService>();
-
-    @Autowired
-    AggregatePayConfig.YijiPayConfig yijiPayConfig;
-
-    @Autowired
-    YijiPayClient yijiPayClient;
-
-    @PostConstruct
-    public void init(){
-        serviceMap.put(PayChannelEnums.YIJI.name(), YijiPayServiceImpl.getInstance(yijiPayConfig,yijiPayClient));
-    }
-
-
     @Override
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
-        return this.doProcess(requestDto,"verifyBankCard");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"verifyBankCard");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto) {
-        return this.doProcess(requestDto,"verifyBankCardQuery");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"verifyBankCardQuery");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
-        return this.doProcess(requestDto,"loan");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"loan");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
-        return this.doProcess(requestDto,"addApplyCard");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"addApplyCard");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse cardAddConfirm(AggregateRequestDto<CardAddConfirmDto> requestDto) {
-        return this.doProcess(requestDto,"cardAddConfirm");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"cardAddConfirm");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
-        return this.doProcess(requestDto,"cardDelete");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"cardDelete");
+        }
+        return null;
     }
 
     @Override
     public CommonResponse payEntrustPay(AggregateRequestDto<EntrustPayDto> requestDto) {
-        return this.doProcess(requestDto,"payEntrustPay");
+        Class<? extends PayAdapter> clazz ;
+        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
+            clazz = YijiAdapter.class;
+            return this.doProcess(requestDto, clazz,"payEntrustPay");
+        }
+        return null;
     }
 
-
-    private CommonResponse doProcess(AggregateRequestDto<?> requestDto,String methodName){
+    private CommonResponse doProcess(AggregateRequestDto<?> requestDto,Class<? extends PayAdapter> clazz,String methodName){
         CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod(methodName,requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
+        try{
+            PayAdapter adapter = clazz.newInstance();
+            if(adapter.support(adapter)){
+                Method method = adapter.getClass().getMethod(methodName,AggregateRequestDto.class);
+                commonResponse = (CommonResponse)method.invoke(adapter,requestDto);
+                return commonResponse;
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
-        return commonResponse;
+        return null;
     }
-
 }
