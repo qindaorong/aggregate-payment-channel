@@ -6,7 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
@@ -34,7 +37,7 @@ public class EntrustPayDto extends BaseDto {
      * 交易金额
      */
     @ApiModelProperty(value = "交易金额")
-    @NotBlank(message = "交易金额不能为空")
+    @NotNull
     private BigDecimal tradeAmount;
 
     /**

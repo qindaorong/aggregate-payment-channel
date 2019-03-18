@@ -21,7 +21,7 @@ public interface YijiCallBackService {
 
 
     /**
-     *
+     * 委托扣款异步通知
      * @param request
      * @return
      */

@@ -11,6 +11,8 @@ import java.util.List;
 @Slf4j
 public class ExceptionAdvice {
 
+
+    public static final Integer EXCEPTCODE = 500;
     /**
      * 400 - Bad Request
      */

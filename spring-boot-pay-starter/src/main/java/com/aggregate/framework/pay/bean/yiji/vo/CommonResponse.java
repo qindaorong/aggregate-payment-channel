@@ -15,4 +15,9 @@ public class CommonResponse extends BaseDto {
      */
     private String responseStr;
 
+    /**
+     * 成功标识
+     */
+    private Boolean flag;
+
 }

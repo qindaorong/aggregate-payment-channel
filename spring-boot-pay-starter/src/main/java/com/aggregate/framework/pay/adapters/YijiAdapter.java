@@ -140,7 +140,10 @@ public class YijiAdapter extends YIjiBaseAdapter implements PayAdapter {
     public CommonResponse convert2CommonResponse(String  responseStr){
         CommonResponse commonResponse  = new CommonResponse();
         YijiCommonResponse yijiCommonResponse = JsonUtil.parseObject(responseStr, YijiCommonResponse.class);
-        BeanUtils.copyProperties(yijiCommonResponse,commonResponse);
+        commonResponse.setResultCode(yijiCommonResponse.getResultCode());
+        commonResponse.setResultMessage(yijiCommonResponse.getResultMessage());
+        commonResponse.setResponseStr(responseStr);
+        commonResponse.setFlag( Boolean.valueOf(yijiCommonResponse.getSuccess()));
         return commonResponse;
     }
 

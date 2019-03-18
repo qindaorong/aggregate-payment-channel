@@ -36,6 +36,8 @@ public class ResponseResult<T> implements Serializable {
         this(code, message, (T) null);
     }
 
+
+
     public ResponseResult(Integer code, String message, T data) {
         this.meta = new CodeMessage();
         this.meta.setCode(code);
@@ -57,6 +59,10 @@ public class ResponseResult<T> implements Serializable {
 
     public static <T> ResponseResult<T> fail(Integer code, String message) {
         return new ResponseResult(code, message);
+    }
+
+    public static <T> ResponseResult<T> fail(Integer code, String message,T data) {
+        return new ResponseResult(code, message,data);
     }
 
     public T getData() {

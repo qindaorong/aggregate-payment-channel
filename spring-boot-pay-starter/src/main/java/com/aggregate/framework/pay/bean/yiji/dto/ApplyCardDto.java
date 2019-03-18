@@ -20,7 +20,7 @@ public class ApplyCardDto extends BaseDto {
      */
     @ApiModelProperty(value = "签约通道")
     @NotBlank(message = "签约通道不能为空")
-    private ApplyChannelEnums enums;
+    private String enums;
 
     /**
      * 签约账号（银行卡号）
