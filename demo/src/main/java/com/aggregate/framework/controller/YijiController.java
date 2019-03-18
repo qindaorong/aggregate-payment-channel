@@ -17,7 +17,7 @@ import java.util.Date;
 
 @RestController
 @Slf4j
-public class TestController {
+public class YijiController {
 
     @Autowired
     AggregatePayService yijiService;
