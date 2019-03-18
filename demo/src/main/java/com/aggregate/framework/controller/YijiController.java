@@ -1,19 +1,29 @@
 package com.aggregate.framework.controller;
 
+import com.aggregate.framework.common.bean.ExceptionAdvice;
+import com.aggregate.framework.common.bean.ResponseResult;
+import com.aggregate.framework.common.exception.CodeMessage;
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
+import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
 import com.aggregate.framework.pay.enums.PayChannelEnums;
-import com.aggregate.framework.pay.enums.yiji.AccountTypeEnums;
-import com.aggregate.framework.pay.enums.yiji.ApplyChannelEnums;
-import com.aggregate.framework.pay.enums.yiji.VerifyCardTypeEnums;
 import com.aggregate.framework.pay.service.AggregatePayService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -23,35 +33,38 @@ public class YijiController {
     AggregatePayService yijiService;
 
 
+
     /**
      *  验卡
      */
-    @GetMapping(value = "/verifyBankCard")
-    public void verifyBankCard(){
-        VerifyBankCardDto verifyBankCardDto =
+    @PostMapping(value = "/verifyBankCard")
+    @ApiOperation(value="验卡接口使用时,可进行三要素验卡、四要素验卡或四要素加短信验卡",httpMethod = "POST", notes = "VerifyBankCardDto  请求实体具体参数以swagger文档说明为参考")
+    public CommonResponse verifyBankCard(@RequestBody final @Valid VerifyBankCardDto verifyBankCardDto){
+        /*VerifyBankCardDto verifyBankCardDto =
                 VerifyBankCardDto.builder()
                         .bankCardNo("6226095711393038")
                         .verifyCardType(VerifyCardTypeEnums.threeElement.getVerifyCardType())
                         .certNo("610429199009085178")
                         .mobileNo("18317146596")
                         .name("马涛")
-                        .outOrderNo("1234567891").build();
+                        .outOrderNo("1234567891").build();*/
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(verifyBankCardDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.verifyBankCard(aggregateRequestDto);
+        return  yijiService.verifyBankCard(aggregateRequestDto);
         //log.debug("[aggregayrPayService][verifyBankCard] value is {}",isPass);
     }
 
     /**
      * 验卡查询
      */
-    @GetMapping(value = "/verifyBankCardQuery")
-    public void verifyBankCardQuery(){
-        VerifyBankCardQueryDto verifyBankCardQueryDto =
+    @PostMapping(value = "/verifyBankCardQuery")
+    @ApiOperation(value="验卡查询接口",httpMethod = "POST", notes = "VerifyBankCardQueryDto  请求实体具体参数以swagger文档说明为参考")
+    public CommonResponse verifyBankCardQuery(@RequestBody final @Valid VerifyBankCardQueryDto verifyBankCardQueryDto){
+     /*   VerifyBankCardQueryDto verifyBankCardQueryDto =
                 VerifyBankCardQueryDto.builder()
-                        .outOrderNo("1234567891").build();
+                        .outOrderNo("1234567891").build();*/
 
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(verifyBankCardQueryDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.verifyBankCardQuery(aggregateRequestDto);
+        return yijiService.verifyBankCardQuery(aggregateRequestDto);
         //log.debug("[aggregayrPayService][verifyBankCard] value is {}",isPass);
     }
 
@@ -60,9 +73,10 @@ public class YijiController {
     /**
      * 放款
      */
-    @GetMapping(value = "/loan")
-    public void loan(){
-        BigDecimal bigDecimal = new BigDecimal(1);
+    @ApiOperation(value="放款接口",httpMethod = "POST", notes = "LoanDto  请求实体具体参数以swagger文档说明为参考")
+    @PostMapping(value = "/loan")
+    public CommonResponse loan(@RequestBody final @Valid LoanDto loanDto){
+       /* BigDecimal bigDecimal = new BigDecimal(1);
         Date date = new Date();
         LoanDto loanDto =
                 LoanDto.builder()
@@ -74,10 +88,9 @@ public class YijiController {
                         .accountType(AccountTypeEnums.privateType.getResultCode())
                         .bankCode("CMB")
                         .purpose("代发工资")
-                        .build();
+                        .build();*/
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(loanDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.loan(aggregateRequestDto);
-        //log.debug("[aggregayrPayService][verifyBankCard] value is {}",isPass);
+        return yijiService.loan(aggregateRequestDto);
     }
 
 
@@ -87,9 +100,10 @@ public class YijiController {
      *  添加银行卡（签约）
      *  statues : ok
      */
-    @GetMapping(value = "/addApplyCard")
-    public void addApplyCard(){
-        ApplyCardDto applyCardDto =
+    @ApiOperation(value=" 添加银行卡（签约）",httpMethod = "POST", notes = "ApplyCardDto  请求实体具体参数以swagger文档说明为参考")
+    @PostMapping(value = "/addApplyCard")
+    public CommonResponse addApplyCard(@RequestBody final @Valid ApplyCardDto applyCardDto){
+       /* ApplyCardDto applyCardDto =
                 ApplyCardDto.builder()
                         .enums(ApplyChannelEnums.unionpay)
                         .signAccId("6226095711393038")
@@ -97,9 +111,9 @@ public class YijiController {
                         .signID("610429199009085178")
                         .signMobile("18317146596")
                         .merchOrderNo("12345678901234567890")
-                        .build();
+                        .build();*/
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(applyCardDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.addApplyCard(aggregateRequestDto);
+        return yijiService.addApplyCard(aggregateRequestDto);
     }
 
 
@@ -107,18 +121,25 @@ public class YijiController {
      *  确认添加银行卡
      *  statues : ok
      */
-    @GetMapping(value = "/cardAddConfirm")
-    public void cardAddConfirm(){
-        CardAddConfirmDto cardAddConfirmDto =
+    @ApiOperation(value="确认添加银行卡",httpMethod = "POST", notes = "CardAddConfirmDto  请求实体具体参数以swagger文档说明为参考")
+    @PostMapping(value = "/cardAddConfirm")
+    public ResponseResult cardAddConfirm(@RequestBody final @Valid CardAddConfirmDto cardAddConfirmDto, BindingResult bindingResult){
+       /* CardAddConfirmDto cardAddConfirmDto =
                 CardAddConfirmDto.builder()
                         // 动态短信验证码
                         .authMsg("123456")
                         // 申请添加银行卡时，由易极付返回
                         .signNo("000q01o01j1b6qzjwk00")
                         .merchOrderNo("12345678901234567890")
-                        .build();
-        AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(cardAddConfirmDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.cardAddConfirm(aggregateRequestDto);
+                        .build();*/
+        if(bindingResult.hasErrors()){
+            CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
+            return ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
+        }else{
+            AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(cardAddConfirmDto).enums(PayChannelEnums.YIJI).build();
+            CommonResponse response = yijiService.cardAddConfirm(aggregateRequestDto);
+            return ResponseResult.success(response);
+        }
     }
 
 
@@ -127,25 +148,27 @@ public class YijiController {
      *  删除银行卡（解约）
      *  statues : hold on
      */
-    @GetMapping(value = "/cardDelete")
-    public void cardDelete(){
-        DeleteCardDto deleteCardDto =
+    @ApiOperation(value="删除银行卡（解约）",httpMethod = "POST", notes = "DeleteCardDto  请求实体具体参数以swagger文档说明为参考")
+    @PostMapping(value = "/cardDelete")
+    public CommonResponse cardDelete(@RequestBody final @Valid DeleteCardDto deleteCardDto){
+      /*  DeleteCardDto deleteCardDto =
                 DeleteCardDto.builder()
                         // 申请添加银行卡时，由易极付返回
                         .signNo("000q01o01j1b6qzjwk00")
                         .merchOrderNo("12345678901234567890")
-                        .build();
+                        .build();*/
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(deleteCardDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.cardDelete(aggregateRequestDto);
+        return yijiService.cardDelete(aggregateRequestDto);
     }
 
 
     /**
      *  扣款
      */
-    @GetMapping(value = "/payEntrustPay")
-    public void payEntrustPay(){
-        BigDecimal bigDecimal = new BigDecimal(1);
+    @ApiOperation(value="扣款",httpMethod = "POST", notes = "EntrustPayDto  请求实体具体参数以swagger文档说明为参考")
+    @PostMapping(value = "/payEntrustPay")
+    public CommonResponse payEntrustPay(@RequestBody final @Valid EntrustPayDto entrustPayDto){
+       /* BigDecimal bigDecimal = new BigDecimal(1);
         EntrustPayDto entrustPayDto =
                 EntrustPayDto.builder()
                         .orderDesc("特仑苏1盒")
@@ -154,8 +177,8 @@ public class YijiController {
                         .tradeAmount(bigDecimal)
                         // 申请添加银行卡时，由易极付返回
                         .signNo("")
-                        .build();
+                        .build();*/
         AggregateRequestDto aggregateRequestDto = AggregateRequestDto.builder().t(entrustPayDto).enums(PayChannelEnums.YIJI).build();
-        yijiService.payEntrustPay(aggregateRequestDto);
+        return yijiService.payEntrustPay(aggregateRequestDto);
     }
 }
