@@ -1,15 +1,11 @@
 package com.aggregate.framework.pay.service;
 
 import com.aggregate.framework.pay.adapters.PayAdapter;
-import com.aggregate.framework.pay.adapters.YijiAdapter;
 import com.aggregate.framework.pay.bean.AggregateRequestDto;
 import com.aggregate.framework.pay.bean.yiji.dto.*;
 import com.aggregate.framework.pay.bean.yiji.vo.CommonResponse;
-import com.aggregate.framework.pay.enums.PayChannelEnums;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Method;
 
 @Service
 @Slf4j
@@ -17,85 +13,63 @@ public class AggregatePayServiceImpl implements AggregatePayService {
 
     @Override
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"verifyBankCard");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.verifyBankCard(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"verifyBankCardQuery");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.verifyBankCardQuery(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"loan");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.loan(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"addApplyCard");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.addApplyCard(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse cardAddConfirm(AggregateRequestDto<CardAddConfirmDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"cardAddConfirm");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.cardAddConfirm(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"cardDelete");
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.cardDelete(requestDto);
         }
         return null;
     }
 
     @Override
     public CommonResponse payEntrustPay(AggregateRequestDto<EntrustPayDto> requestDto) {
-        Class<? extends PayAdapter> clazz ;
-        if(requestDto.getEnums().equals(PayChannelEnums.YIJI)){
-            clazz = YijiAdapter.class;
-            return this.doProcess(requestDto, clazz,"payEntrustPay");
-        }
-        return null;
-    }
-
-    private CommonResponse doProcess(AggregateRequestDto<?> requestDto,Class<? extends PayAdapter> clazz,String methodName){
-        CommonResponse  commonResponse = null;
-        try{
-            PayAdapter adapter = clazz.newInstance();
-            if(adapter.support(adapter)){
-                Method method = adapter.getClass().getMethod(methodName,AggregateRequestDto.class);
-                commonResponse = (CommonResponse)method.invoke(adapter,requestDto);
-                return commonResponse;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        PayAdapter adapter= requestDto.getEnums().get();
+        if(adapter.support(adapter)) {
+            return adapter.payEntrustPay(requestDto);
         }
         return null;
     }

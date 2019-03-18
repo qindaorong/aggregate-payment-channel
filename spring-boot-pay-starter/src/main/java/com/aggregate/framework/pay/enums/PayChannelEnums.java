@@ -1,16 +1,28 @@
 package com.aggregate.framework.pay.enums;
 
-import lombok.AllArgsConstructor;
+import com.aggregate.framework.pay.adapters.PayAdapter;
+import com.aggregate.framework.pay.adapters.YijiAdapter;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum PayChannelEnums {
+
 	/**
 	 * 易极支付
 	 */
-	YIJI("yiji");
+	YIJI(new YijiAdapter());
 
-	private String payType;
+	private PayAdapter payAdapter;
+
+	PayChannelEnums(PayAdapter payAdapter){
+		this.payAdapter = payAdapter;
+	}
+
+	public PayAdapter get(){
+		return  this.payAdapter;
+	}
+
+
+
 
 }
