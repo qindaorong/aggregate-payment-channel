@@ -37,75 +37,45 @@ public class AggregatePayServiceImpl implements AggregatePayService {
 
     @Override
     public CommonResponse verifyBankCard(AggregateRequestDto<VerifyBankCardDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("verifyBankCard",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
+        return this.doProcess(requestDto,"verifyBankCard");
     }
 
     @Override
     public CommonResponse verifyBankCardQuery(AggregateRequestDto<VerifyBankCardQueryDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("verifyBankCardQuery",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
+        return this.doProcess(requestDto,"verifyBankCardQuery");
     }
 
     @Override
     public CommonResponse loan(AggregateRequestDto<LoanDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("loan",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
+        return this.doProcess(requestDto,"loan");
     }
 
     @Override
     public CommonResponse addApplyCard(AggregateRequestDto<ApplyCardDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("addApplyCard",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
+        return this.doProcess(requestDto,"addApplyCard");
     }
 
     @Override
     public CommonResponse cardAddConfirm(AggregateRequestDto<CardAddConfirmDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("cardAddConfirm",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
+        return this.doProcess(requestDto,"cardAddConfirm");
     }
 
     @Override
     public CommonResponse cardDelete(AggregateRequestDto<DeleteCardDto> requestDto) {
+        return this.doProcess(requestDto,"cardDelete");
+    }
+
+    @Override
+    public CommonResponse payEntrustPay(AggregateRequestDto<EntrustPayDto> requestDto) {
+        return this.doProcess(requestDto,"payEntrustPay");
+    }
+
+
+    private CommonResponse doProcess(AggregateRequestDto<?> requestDto,String methodName){
         CommonResponse  commonResponse = null;
         try {
             Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("cardDelete",requestDto.getClass());
+            Method method = obj.getClass().getMethod(methodName,requestDto.getClass());
             commonResponse = (CommonResponse)method.invoke(obj,requestDto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,16 +83,4 @@ public class AggregatePayServiceImpl implements AggregatePayService {
         return commonResponse;
     }
 
-    @Override
-    public CommonResponse payEntrustPay(AggregateRequestDto<EntrustPayDto> requestDto) {
-        CommonResponse  commonResponse = null;
-        try {
-            Object obj = new PayProxyHandler().getInstance(serviceMap.get(requestDto.getEnums().name()));
-            Method method = obj.getClass().getMethod("payEntrustPay",requestDto.getClass());
-            commonResponse = (CommonResponse)method.invoke(obj,requestDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return commonResponse;
-    }
 }
