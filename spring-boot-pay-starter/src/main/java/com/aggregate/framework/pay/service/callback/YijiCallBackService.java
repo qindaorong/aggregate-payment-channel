@@ -20,11 +20,6 @@ public interface YijiCallBackService {
     Boolean loanCallBack(HttpServletRequest request);
 
 
-    /**
-     * 委托扣款异步通知
-     * @param request
-     * @return
-     */
-    Boolean payEntrustPayCallBack(HttpServletRequest request);
+
 
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class YijiCallBackServiceImpl extends NotifyHandler implements YijiCallBackService {
+public class YijiCallBackServiceImpl implements YijiCallBackService {
 
     @Autowired
     private AggregatePayConfig.YijiPayConfig yijiPayConfig;
@@ -47,20 +47,5 @@ public class YijiCallBackServiceImpl extends NotifyHandler implements YijiCallBa
         return null;
     }
 
-    @Override
-    public Boolean payEntrustPayCallBack(HttpServletRequest request) {
-        Map<String, String> notifyData = NotifyUtils.getNotifyParameters(request);
-        boolean signResult = YijifuGateway.getOpenApiClientService().verificationSign(notifyData,yijiPayConfig.getPrivateKey());
-        return null;
-    }
 
-    @Override
-    public void handleNotify(ApiMessage apiMessage) {
-
-    }
-
-    @Override
-    public String serviceKey() {
-        return null;
-    }
 }
