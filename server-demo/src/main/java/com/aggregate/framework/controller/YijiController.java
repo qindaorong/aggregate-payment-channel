@@ -32,14 +32,6 @@ public class YijiController {
     @PostMapping(value = "/verifyBankCard")
     @ApiOperation(value="验卡接口使用时,可进行三要素验卡、四要素验卡或四要素加短信验卡",httpMethod = "POST", notes = "VerifyBankCardDto  请求实体具体参数以swagger文档说明为参考")
     public ResponseResult verifyBankCard(@RequestBody final @Valid VerifyBankCardDto verifyBankCardDto, BindingResult bindingResult){
-        /*VerifyBankCardDto verifyBankCardDto =
-                VerifyBankCardDto.builder()
-                        .bankCardNo("6226095711393038")
-                        .verifyCardType(VerifyCardTypeEnums.threeElement.getVerifyCardType())
-                        .certNo("610429199009085178")
-                        .mobileNo("18317146596")
-                        .name("马涛")
-                        .outOrderNo("1234567891").build();*/
         if(bindingResult.hasErrors()){
             CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
             return  ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -60,9 +52,6 @@ public class YijiController {
     @PostMapping(value = "/verifyBankCardQuery")
     @ApiOperation(value="验卡查询接口",httpMethod = "POST", notes = "VerifyBankCardQueryDto  请求实体具体参数以swagger文档说明为参考")
     public ResponseResult verifyBankCardQuery(@RequestBody final @Valid VerifyBankCardQueryDto verifyBankCardQueryDto, BindingResult bindingResult){
-     /*   VerifyBankCardQueryDto verifyBankCardQueryDto =
-                VerifyBankCardQueryDto.builder()
-                        .outOrderNo("1234567891").build();*/
      if(bindingResult.hasErrors()){
          CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
          return  ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -85,19 +74,6 @@ public class YijiController {
     @ApiOperation(value="放款接口",httpMethod = "POST", notes = "LoanDto  请求实体具体参数以swagger文档说明为参考")
     @PostMapping(value = "/loan")
     public ResponseResult loan(@RequestBody final @Valid LoanDto loanDto, BindingResult bindingResult){
-       /* BigDecimal bigDecimal = new BigDecimal(1);
-        Date date = new Date();
-        LoanDto loanDto =
-                LoanDto.builder()
-                        .merchOrderNo(date.getTime()+"")
-                        .transAmount(bigDecimal)
-                        .accountName("郭欣")
-                        .certNo("610121199107274442")
-                        .accountNo("6214830297644683")
-                        .accountType(AccountTypeEnums.privateType.getResultCode())
-                        .bankCode("CMB")
-                        .purpose("代发工资")
-                        .build();*/
        if(bindingResult.hasErrors()){
            CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
            return ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -122,16 +98,6 @@ public class YijiController {
     @ApiOperation(value=" 添加银行卡（签约）",httpMethod = "POST", notes = "ApplyCardDto  请求实体具体参数以swagger文档说明为参考")
     @PostMapping(value = "/addApplyCard")
     public ResponseResult addApplyCard(@RequestBody final @Valid ApplyCardDto applyCardDto, BindingResult bindingResult){
-       /* ApplyCardDto applyCardDto =
-                ApplyCardDto.builder()
-                        .enums(ApplyChannelEnums.unionpay)
-                        .signAccId("6226095711393038")
-                        .signName("马涛")
-                        .signID("610429199009085178")
-                        .signMobile("18317146596")
-                        .merchOrderNo("12345678901234567891")
-                        .build();*/
-
         if(bindingResult.hasErrors()){
             CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
             return ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -154,14 +120,6 @@ public class YijiController {
     @ApiOperation(value="确认添加银行卡",httpMethod = "POST", notes = "CardAddConfirmDto  请求实体具体参数以swagger文档说明为参考")
     @PostMapping(value = "/cardAddConfirm")
     public ResponseResult cardAddConfirm(@RequestBody final @Valid CardAddConfirmDto cardAddConfirmDto, BindingResult bindingResult){
-       /* CardAddConfirmDto cardAddConfirmDto =
-                CardAddConfirmDto.builder()
-                        // 动态短信验证码
-                        .authMsg("123456")
-                        // 申请添加银行卡时，由易极付返回
-                        .signNo("000q01o01j1b6qzjwk00")
-                        .merchOrderNo("12345678901234567890")
-                        .build();*/
         if(bindingResult.hasErrors()){
             CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
             return ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -185,12 +143,6 @@ public class YijiController {
     @ApiOperation(value="删除银行卡（解约",httpMethod = "POST", notes = "DeleteCardDto  请求实体具体参数以swagger文档说明为参考")
     @PostMapping(value = "/cardDelete")
     public ResponseResult cardDelete(@RequestBody final @Valid DeleteCardDto deleteCardDto,BindingResult bindingResult){
-      /*  DeleteCardDto deleteCardDto =
-                DeleteCardDto.builder()
-                        // 申请添加银行卡时，由易极付返回
-                        .signNo("000q01o01j1b6qzjwk00")
-                        .merchOrderNo("12345678901234567890")
-                        .build();*/
         if(bindingResult.hasErrors()){
             CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
             return ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
@@ -212,16 +164,6 @@ public class YijiController {
     @ApiOperation(value="扣款",httpMethod = "POST", notes = "EntrustPayDto  请求实体具体参数以swagger文档说明为参考")
     @PostMapping(value = "/payEntrustPay")
     public ResponseResult payEntrustPay(@RequestBody final @Valid EntrustPayDto entrustPayDto,BindingResult bindingResult){
-       /* BigDecimal bigDecimal = new BigDecimal(1);
-        EntrustPayDto entrustPayDto =
-                EntrustPayDto.builder()
-                        .orderDesc("特仑苏1盒")
-                        // 生活服务消费
-                        .bizTp("100007")
-                        .tradeAmount(bigDecimal)
-                        // 申请添加银行卡时，由易极付返回
-                        .signNo("")
-                        .build();*/
         if(bindingResult.hasErrors()){
             CodeMessage codeMessage = ExceptionAdvice.handleMethodArgumentNotValidException(bindingResult);
             return  ResponseResult.fail(codeMessage.getCode(),codeMessage.getMessage());
